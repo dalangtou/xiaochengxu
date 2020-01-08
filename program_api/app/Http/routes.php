@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+
+//accessToken严格模式
+Route::group(['prefix' => 'user', 'namespace' => '\User'], function () {
+    Route::post('/sign', 'UserController@sign');
+    Route::post('/login', 'UserController@login');
 });
