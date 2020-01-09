@@ -1,0 +1,40 @@
+.map_container{
+  position: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+.map {
+  position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.rgc_info {
+    padding: 0 5px;
+}
+
+.add_information{
+  position: fixed;
+  bottom: 50rpx;
+  right: 50rpx;   
+  background-color: #ff5722;
+  color: #FFFFFF;
+  padding: 10rpx;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50rpx;
+}
+
+.about_me{
+  position: fixed;
+  bottom: 150rpx;
+  right: 50rpx;   
+  background-color: #ff5722;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 10rpx;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50rpx;
+}
