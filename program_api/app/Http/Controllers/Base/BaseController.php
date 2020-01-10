@@ -27,8 +27,8 @@ class BaseController extends Controller
     public function _response($code, $message, $data = [])
     {
         $array = array(
-            'message' => $message,
-            'status' => $code
+            'status' => $code,
+            'message' => $message
         );
         if(!empty($data)) $array['data'] = $data;
         return response()->json($array);
