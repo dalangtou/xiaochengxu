@@ -36,18 +36,15 @@ class GeoHash
      * https://en.wikipedia.org/wiki/Geohash#Cell_Dimensions
      */
 
-    CONST GEO_NUM_1=1;
-    CONST GEO_NUM_2=2;
-    CONST GEO_NUM_3=3;
-    CONST GEO_NUM_4=4;
-    CONST GEO_NUM_5=5;
-    CONST GEO_NUM_6=6;
-    CONST GEO_NUM_7=7;
-    CONST GEO_NUM_8=8;
-    CONST GEO_NUM_9=9;
-    CONST GEO_NUM_10=10;
-    CONST GEO_NUM_11=11;
-    CONST GEO_NUM_12=12;
+    //KM:千米  M:米
+    CONST KM_2500 = 1;
+    CONST KM_630 = 2;
+    CONST KM_78 = 3;
+    CONST KM_20 = 4;
+    CONST M_2400 = 5;
+    CONST M_610 = 6;
+    CONST M_76 = 7;
+    CONST M_19 = 8;
 
     private $coding = "0123456789bcdefghjkmnpqrstuvwxyz";
     private $codingMap = array();

@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\Http\Extend\ScopeRelation;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Information extends Model
 {
+    use ScopeRelation;
+
     protected $table = 'information';
     protected $guarded = [];
+
+    const DEF_VALID_TIME = 7200;
 
     public function tag()
     {
@@ -19,9 +25,24 @@ class Information extends Model
         return $this->hasMany(Comment::class,'id', 'i_id');
     }
 
-    public function nearbyList($geohash, $u_id)
+    public function user()
     {
+        return $this->belongsTo(User::class,'u_id', 'id');
+    }
 
+    public function userDetails()
+    {
+        return $this->belongsTo(UserDetail::class,'u_id', 'u_id');
+    }
+
+    public function nearbyList($geohash)
+    {
+        return $this->withU()->withUD()
+            ->notDel()
+            ->status('i_status', 1)
+            ->where('i_geohash', 'like', "%{$geohash}%")
+            ->where('i_stale_at', '>', Carbon::now())
+            ->get();
     }
 
     public function post($data)

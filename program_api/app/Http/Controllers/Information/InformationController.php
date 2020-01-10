@@ -20,17 +20,15 @@ class InformationController extends BaseController
     //附近列表
     public function nearbyList()
     {
-        $u_id = $this->request->input('u_id');
+        $u_id = $this->request->input('u_id', 0);
         $latitude = $this->request->input('latitude');
         $longitude = $this->request->input('longitude');
 
         $geohash = GeoHash::encode($latitude, $longitude);
 
-        $list = $this->mInformation->nearbyList($geohash, $u_id);
+        $list = $this->mInformation->nearbyList(getScope($geohash,GeoHash::M_2400));
 
-
-
-
+        return $this->_response(200,config('code.200'), $list);
     }
 
     //发布
@@ -44,6 +42,8 @@ class InformationController extends BaseController
 
         $data['i_type'] = isset($data['img']) ? 1 : 0;
 
+        $data['i_stale_at'] = isset($data['i_stale_at']) ? $data['i_stale_at'] : time()+Information::DEF_VALID_TIME;
+
         $res = $this->mInformation->post($data);
 
         if (!$res) return $this->_response(1001, config('code.1001'));
@@ -53,6 +53,10 @@ class InformationController extends BaseController
     //评论
     public function comment()
     {
+        $u_id = $this->request->input('u_id');
+        $i_id = $this->request->input('id');
+        $p_id = $this->request->input('p_id');
+
 
     }
 

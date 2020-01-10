@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $table = 'user';
+    protected $guarded = ['phone', 'openid'];
 
     public function detail()
     {
