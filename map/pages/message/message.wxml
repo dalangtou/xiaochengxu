@@ -1,0 +1,22 @@
+<view>
+   <view>
+     <button class='clearnews' bindtap='clearmynews'>清空我的消息</button>
+   </view>
+   <view>
+     <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array}}">
+        <view class="picker">
+            选择区域位置消息范围
+        </view>
+     </picker>
+     <picker bindchange="bindPickerChange2" value="{{index2}}" range="{{array}}">
+        <view class="picker">
+            选择当前位置消息范围
+        </view>
+     </picker>
+     <picker bindchange="bindPickerChange3" value="{{index3}}" range="{{kind}}">
+        <view class="picker">
+            选择接收消息类别
+        </view>
+     </picker>
+   </view>
+</view>

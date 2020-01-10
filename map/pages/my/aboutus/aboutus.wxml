@@ -1,0 +1,8 @@
+<text class="desc">
+	《地图社交》是君玉阁工作室出品的一款社交软件。
+</text>
+<image src="/static/images/smart.png" mode="widthFix" />
+<view class="copyright">
+<text>君玉阁工作室</text>
+<view><text>Copyright @ {{year}} All Rights Reserved</text></view>
+</view>
