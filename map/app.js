@@ -158,4 +158,7 @@ App({
   },
   Touches: new Touches(),
   util: __utils,
+  globalData:{
+    pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",
+  },
 })

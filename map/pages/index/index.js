@@ -1,13 +1,15 @@
 var bmap = require('../../libs/bmap-wx.min.js');
 var bmap_css = require('../../libs/bmap_css.js');
 var wxMarkerData = [];
+var app = getApp();
 const key = '7DwOpTyjRK3HGQR9UapjKUXA4ce5s0oO';
 Page({
   data: {
     markers: [],
     latitude: '',
     longitude: '',
-    rgcData: {}
+    rgcData: {},
+    list:[]
   },
   makertap: function (e) {
     var that = this;
@@ -20,7 +22,7 @@ Page({
       ak: key
     });
     var fail = function (data) {
-      console.log(data)
+      // console.log(data)
     };
     var success = function (data) {
       wxMarkerData = data.wxMarkerData;
@@ -40,6 +42,37 @@ Page({
       success: success,
       iconPath: '../../img/marker_red.png',
       iconTapPath: '../../img/marker_red.png'
+    });
+
+    this.data.list.forEach(function (item, index) {
+      console.log(item);
+    })
+    
+    wx.request({
+      url: app.globalData.pubSiteUrl + 'Info/list', //url
+      method: 'GET', //请求方式
+      header: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        // activityId: options.id,  //参数
+        u_id: 17,
+        latitude: 34.76667,
+        longitude: 113.65000,
+      },
+      success: function (res) {
+        if (res.data.status == 200) {
+          that.setData({
+            list: res.data.data,
+          })
+        }
+      },
+      fail: function () {
+        app.consoleLog("请求数据失败");
+      },
+      complete: function () {
+        // complete 
+      }
     });
   },
   showSearchInfo: function (data, i) {
