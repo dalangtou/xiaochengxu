@@ -21,6 +21,18 @@ function showModal(c,t,fun) {
     })
 }
 
+// 加载框
+function dataLoading(txt, icon, fun) {
+  wx.showToast({
+    title: txt,
+    icon: icon,
+    duration: 500,
+    success: fun
+  })
+}
+module.exports.dataLoading = dataLoading;
+
+
 
 module.exports.showTip = showTip;
 module.exports.showModal = showModal;

@@ -22,7 +22,7 @@ class Information extends Model
 
     public function comment()
     {
-        return $this->hasMany(Comment::class,'id', 'i_id');
+        return $this->hasMany(Comment::class,'i_id', 'id');
     }
 
     public function user()
@@ -35,13 +35,14 @@ class Information extends Model
         return $this->belongsTo(UserDetail::class,'u_id', 'u_id');
     }
 
-    public function nearbyList($geohash)
+    public function nearbyList($geohash, $u_id = 0)
     {
-        return $this->withU()->withUD()
+        return $this->withU()->withUD()->withC($u_id)
             ->notDel()
             ->status('i_status', 1)
             ->where('i_geohash', 'like', "%{$geohash}%")
             ->where('i_stale_at', '>', Carbon::now())
+            ->orderBy('updated_at', 'desc')
             ->get();
     }
 
@@ -69,5 +70,12 @@ class Information extends Model
     public function incrementByInfo($information, $field, $num = 1)
     {
         return $information->increment($field, $num);
+    }
+
+    public function getInformationById($i_id)
+    {
+        return $this->notDel()
+            ->status('i_status', 1)
+            ->find($i_id);
     }
 }

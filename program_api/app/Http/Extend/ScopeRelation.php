@@ -21,7 +21,7 @@ trait ScopeRelation
      * @param $field
      * @return Builder
      */
-    public function scopeStatus(Builder $builder, $field, $status)
+    public function scopeStatus(Builder $builder, $field = 'status', $status = 1)
     {
         return $builder->where($field, $status);
     }
@@ -58,4 +58,15 @@ trait ScopeRelation
         }]);
     }
 
+    /**
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeWithC(Builder $builder, $u_id)
+    {
+        return $builder->with(['comment' => function ($query) use($u_id) {
+            $query->where('u_id', $u_id)->orwhere('to_u_id', $u_id);
+            $query->select('i_id', 'u_id', 'to_u_id', 'p_id', 'c_content');
+        }]);
+    }
 }

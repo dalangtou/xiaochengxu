@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $table = 'user';
-    protected $guarded = ['phone', 'openid'];
+    protected $guarded = [];
 
     public function detail()
     {
@@ -17,5 +17,21 @@ class User extends Model
     public function updateUserInfo($data, $uid)
     {
         return $this->where('id', $uid)->update($data);
+    }
+
+    public function post($arr)
+    {
+        $data = [
+            'we_name'=>$arr['we_name'],
+            'phone'=>$arr['phone'],
+            'avatar'=>$arr['avatar'],
+            'country'=>$arr['country'],
+            'province'=>$arr['province'],
+            'city'=>$arr['city'],
+            'language'=>$arr['language'],
+            'openid'=>$arr['openid'],
+        ];
+
+        return $this->create($data);
     }
 }

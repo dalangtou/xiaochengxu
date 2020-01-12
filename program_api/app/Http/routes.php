@@ -19,7 +19,6 @@
 Route::group([], function () {
 
     Route::group(['prefix' => 'user', 'namespace' => '\User'], function () {
-        Route::post('/sign', 'UserController@sign');
         Route::post('/login', 'UserController@login');
         Route::post('/update', 'UserController@update');
     });

@@ -16,8 +16,14 @@
     "pages/my/mycollection/mycollection",
     "pages/my/issues/issues",
     "pages/my/more/more",
+    "pages/template/toasts/toasts",
     "pages/my/logs/logs"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarBackgroundColor": "#118fff",
