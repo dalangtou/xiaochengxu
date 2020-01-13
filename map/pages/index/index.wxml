@@ -1,6 +1,6 @@
 
 <view class="map_container">
-  <map class="map" id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" show-location="true" markers="{{markers}}" bindmarkertap="makertap">
+  <map class="map" id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" show-location="true" markers="{{markers}}" bindmarkertap="makertap" circles="{{circles}}" bindcallouttap = "bindcallouttap" bindmarkertap="markertap">
   <cover-view class="add_information">+</cover-view>
   <cover-view class="about_me">消息</cover-view>
   </map>

@@ -126,6 +126,33 @@ class InformationController extends BaseController
         return $list->map(function ($item){
             $item->iconPath = '../../img/marker_yellow.png';
             $item->iconTapPath = '../../img/marker_yellow.png';
+            $item->callout = [
+                'content'=>$item->i_content,
+                'color'=>'#f00',
+                'fontSize'=>'34',
+                'borderRadius'=>'10',
+                'borderWidth'=>'1',
+                'width'=>'300',
+                'height'=>'250',
+                'borderColor'=>'#fff',
+                'bgColor'=>'#F5F5F5',
+                'padding'=>'10',
+                'display'=>'ALWAYS',
+                'textAlign'=>'center',
+                'boxShadow'=>'4px 8px 16px 0 rgba(0)'
+            ];
+//            $item->label = [
+//                'content'=>$item->i_content,
+//                'color'=>'#f00',
+//                'fontSize'=>'24',
+//                'anchorX'=>'-24',
+//                'anchorY'=>'-26',
+//                'borderRadius'=>'350',
+//                'borderWidth'=>'2',
+//                'borderColor'=>'#fff',
+//                'bgColor'=>'#F5F5F5',
+//                'padding'=>'10',
+//            ];
         });
     }
 

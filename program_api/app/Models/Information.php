@@ -13,7 +13,7 @@ class Information extends Model
     protected $table = 'information';
     protected $guarded = [];
 
-    const DEF_VALID_TIME = 7200;
+    const DEF_VALID_TIME = 72000;
 
     public function tag()
     {
