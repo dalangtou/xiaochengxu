@@ -7,6 +7,7 @@ use App\Http\Extend\GeoHash;
 use App\Models\Comment;
 use App\Models\Information;
 use Illuminate\Http\Request;
+use mysql_xdevapi\Collection;
 
 class InformationController extends BaseController
 {
@@ -31,6 +32,7 @@ class InformationController extends BaseController
 
         $list = $this->mInformation->nearbyList(getScope($geohash,GeoHash::M_2400), $u_id);
 
+        $this->clearData($list);
         return $this->_response(200,config('code.200'), $list);
     }
 
@@ -114,6 +116,17 @@ class InformationController extends BaseController
 
         return $this->_response(200,config('code.200'));
 
+    }
+
+    /**
+     * @param Collection $list
+     */
+    public function clearData($list)
+    {
+        return $list->map(function ($item){
+            $item->iconPath = '../../img/marker_yellow.png';
+            $item->iconTapPath = '../../img/marker_yellow.png';
+        });
     }
 
 }

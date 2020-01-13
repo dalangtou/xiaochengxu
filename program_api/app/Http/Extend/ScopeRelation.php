@@ -69,4 +69,15 @@ trait ScopeRelation
             $query->select('i_id', 'u_id', 'to_u_id', 'p_id', 'c_content');
         }]);
     }
+
+    /**
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeWithT(Builder $builder)
+    {
+        return $builder->with(['tag' => function ($query) {
+            $query->select('id', 'name');
+        }]);
+    }
 }

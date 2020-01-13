@@ -37,12 +37,14 @@ class Information extends Model
 
     public function nearbyList($geohash, $u_id = 0)
     {
-        return $this->withU()->withUD()->withC($u_id)
+        return $this->withU()->withUD()->withC($u_id)->withT()
             ->notDel()
             ->status('i_status', 1)
             ->where('i_geohash', 'like', "%{$geohash}%")
             ->where('i_stale_at', '>', Carbon::now())
             ->orderBy('updated_at', 'desc')
+            ->select('id', 'u_id', 'i_tag', 'i_content', 'i_type', 'i_img', 'i_voice', 'i_video', 'i_city as city', 'i_latitude as latitude',
+                'i_longitude as longitude', 'i_look', 'i_comment_num')
             ->get();
     }
 

@@ -4,6 +4,7 @@
   <cover-view class="add_information">+</cover-view>
   <cover-view class="about_me">消息</cover-view>
   </map>
+
 </view>
 <!-- <view class="rgc_info">
   <text>{{rgcData.address}}</text>

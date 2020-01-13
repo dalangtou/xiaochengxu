@@ -26,16 +26,45 @@ Page({
     };
     var success = function (data) {
       wxMarkerData = data.wxMarkerData;
-      console.log(data.wxMarkerData)
       that.setData({
         markers: wxMarkerData
       });
+      console.log(wxMarkerData);
       that.setData({
         latitude: wxMarkerData[0].latitude
       });
       that.setData({
         longitude: wxMarkerData[0].longitude
       });
+
+      wx.request({
+        url: app.globalData.pubSiteUrl + 'Info/list', //url
+        method: 'GET', //请求方式
+        header: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          // activityId: options.id,  //参数
+          u_id: 17,
+          latitude: wxMarkerData[0].latitude,
+          longitude: wxMarkerData[0].longitude,
+        },
+        success: function (res) {
+          if (res.data.status == 200) {
+            that.setData({
+              list: res.data.data,
+            })
+            console.log(res.data.data)
+          }
+        },
+        fail: function () {
+          app.consoleLog("请求数据失败");
+        },
+        complete: function () {
+          // complete 
+        }
+      });
+
     }
     BMap.regeocoding({
       fail: fail,
@@ -44,36 +73,6 @@ Page({
       iconTapPath: '../../img/marker_red.png'
     });
 
-    this.data.list.forEach(function (item, index) {
-      console.log(item);
-    })
-    
-    wx.request({
-      url: app.globalData.pubSiteUrl + 'Info/list', //url
-      method: 'GET', //请求方式
-      header: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        // activityId: options.id,  //参数
-        u_id: 17,
-        latitude: 34.76667,
-        longitude: 113.65000,
-      },
-      success: function (res) {
-        if (res.data.status == 200) {
-          that.setData({
-            list: res.data.data,
-          })
-        }
-      },
-      fail: function () {
-        app.consoleLog("请求数据失败");
-      },
-      complete: function () {
-        // complete 
-      }
-    });
   },
   showSearchInfo: function (data, i) {
     var that = this;
