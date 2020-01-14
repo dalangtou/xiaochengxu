@@ -76,4 +76,45 @@ class UserController extends BaseController
         }
     }
 
+    //获取用户openid
+    public function verifyUser()
+    {
+        $code = $this->request->input('code');
+
+        $data = json_decode($this->send($code));
+
+        if (isset($data->errcode)) return $this->_response(1000, config('code.1000'));
+        return $this->_response(200, config('code.200'), $data);
+    }
+
+    private function send($code)
+    {
+        $url = env('GET_OPENID');
+        $AppID = env('AppID');
+        $AppSecret = env('AppSecret');
+        $Grant_type = env('Grant_type');
+
+        $url = $url.'?appid='.$AppID.'&secret='.$AppSecret.'&js_code='.$code.'&grant_type='.$Grant_type;
+
+        // 初始化
+        $curl = curl_init();
+        // 设置url路径
+        curl_setopt($curl, CURLOPT_URL, $url);
+        // 将 curl_exec()获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true) ;
+        // 在启用 CURLOPT_RETURNTRANSFER 时候将获取数据返回
+        curl_setopt($curl, CURLOPT_BINARYTRANSFER, true) ;
+        // 不验证SSL
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        // 执行
+        $data = curl_exec($curl);
+        // 打印请求头信息
+//        echo curl_getinfo($curl, CURLINFO_HEADER_OUT);
+        // 关闭连接
+        curl_close($curl);
+
+        return $data;
+    }
+
 }

@@ -1,10 +1,8 @@
 //app.js
 import Touches from './utils/Touches.js'
-var Bmob = require("utils/bmob.js");
 var common = require("utils/common.js");
 const __utils = require('utils/util')
-Bmob.initialize("1412406fdc4eafd05439c8686e8f8576", "e0aaee4b57d8d89009128061b8c368b7");
-console.log(Bmob);
+
 App({
   version: 'v1.0.0', //版本号
   onLaunch: function () {
@@ -23,75 +21,23 @@ App({
       var value = wx.getStorageSync('user_openid')
       if (value) {
       } else {
-        console.log('执行login1')
         wx.login({
           success: function (res) {
             if (res.code) {
-              console.log('执行login2', res);
-            }
-          }
-        });
-        wx.login({
-          success: function (res) {
-            if (res.code) {
-              Bmob.User.requestOpenId(res.code, {
-                success: function (userData) {
-                  wx.getUserInfo({
-                    success: function (result) {
-                      var userInfo = result.userInfo
-                      var nickName = userInfo.nickName
-                      var avatarUrl = userInfo.avatarUrl
-                      var sex = userInfo.gender
-                      Bmob.User.logIn(nickName, userData.openid, {
-                        success: function (user) {
-                          try {
-                            wx.setStorageSync('user_openid', user.get('userData').openid)
-                            wx.setStorageSync('user_id', user.id)
-                            wx.setStorageSync('my_nick', user.get("nickname"))
-                            wx.setStorageSync('my_username', user.get("username"))
-                            wx.setStorageSync('my_sex', user.get("sex"))
-                            wx.setStorageSync('my_avatar', user.get("userPic"))
-                          } catch (e) {
-                          }
-                          console.log("登录成功");
-                        },
-                        error: function (user, error) {
-                          if (error.code == '101') {
-                            var user = new Bmob.User();//开始注册用户
-                            user.set('username', nickName);
-                            user.set('password', userData.openid);
-                            user.set("nickname", nickName);
-                            user.set("userPic", avatarUrl);
-                            user.set("userData", userData);
-                            user.set('sex', sex);
-                            user.set('feednum',0);
-                            user.signUp(null, {
-                              success: function (result) {
-                                console.log('注册成功');
-                                try {//将返回的3rd_session存储到缓存中
-                                  wx.setStorageSync('user_openid', user.get('userData').openid)
-                                  wx.setStorageSync('user_id', user.id)
-                                  wx.setStorageSync('my_nick', user.get("nickname"))
-                                  wx.setStorageSync('my_username', user.get("username"))
-                                  wx.setStorageSync('my_sex', user.get("sex"))
-                                  wx.setStorageSync('my_avatar', user.get("userPic"))
-                                } catch (e) {
-                                }
-                              },
-                              error: function (userData, error) {
-                                console.log("openid=" + userData);
-                                console.log(error)
-                              }
-                            });
-
-                          }
-                        }
-                      });
-                    }
-                  })
+              wx.request({
+                url: that.globalData.pubSiteUrl + 'verifyUser', //url
+                method: 'GET', //请求方式
+                header: {
+                  'Content-Type': 'application/json',
                 },
-                error: function (error) {
-                  console.log("Error: " + error.code + " " + error.message);
+                data: {
+                  code: res.code
+                },
+                success: function (res) {
+                  if (res.data.status == 200) {
+                    wx.setStorageSync('session_key', res.data.data.session_key);
+                    wx.setStorageSync('openid', res.data.data.openid);
+                  }
                 }
               });
             } else {
@@ -99,7 +45,7 @@ App({
             }
           },
           complete: function (e) {
-            console.log('获取用户登录态失败2！' + e)
+            console.log('获取openid 回调函数！' + e)
           }
         });
       }
@@ -159,7 +105,7 @@ App({
   Touches: new Touches(),
   util: __utils,
   globalData:{
-    // pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
-    pubSiteUrl: "http://program-api.com/",//本地
+    pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
+    // pubSiteUrl: "http://program-api.com/",//本地
   },
 })

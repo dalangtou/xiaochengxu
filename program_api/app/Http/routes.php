@@ -35,4 +35,7 @@ Route::group([], function () {
 
     Route::get('Info/list', 'Information\InformationController@nearbyList');
     Route::post('Info/look', 'Information\InformationController@look');
+
+
+    Route::get('verifyUser', 'User\UserController@verifyUser');
 });

@@ -10,6 +10,7 @@ Page({
     remind: '加载中',
     angle: 0,
     userInfo: {},
+    location: {},
     diaryList:[]
   },
   
@@ -18,26 +19,86 @@ Page({
       url: '/pages/index/index',
     });
   },
-  onLoad:function(){
-    var Diary = Bmob.Object.extend("diary");
-    var query = new Bmob.Query(Diary);
-    query.get("4fbcd0fb9c", {
-      success: function (result) {
-        // The object was retrieved successfully.
-        console.log("该日记标题为" + result.get("title"));
+
+  getUserLocation: function (that) {
+    wx.authorize({
+      scope: 'scope.userLocation',
+      success(e) {
+        wx.getLocation({
+          success: function (res) {
+            wx.setStorageSync('latitude', res.latitude);
+            wx.setStorageSync('longitude', res.longitude);
+            wx.setStorageSync('altitude', res.altitude);
+          },
+        });
       },
-      error: function (result, error) {
-        console.log("查询失败");
+      fail(e) {
+        wx.showToast({
+          title: '消息需要您的位置呢亲~',
+          image: '../../img/fail.png',
+          duration: 3000
+        })
       }
-    });
+    })
   },
-  onShow:function(){
-    console.log('onLoad')
-    var that = this
-    app.getUserInfo(function (userInfo) {
-      that.setData({
+
+  getUserInfo:function(e){
+    
+    console.log(e);
+    if (e.detail.errMsg == "getUserInfo:ok"){
+      var str = e.detail.rawData;
+      var userInfo = JSON.parse(str);
+
+      this.setData({
         userInfo: userInfo
       })
+      wx.setStorageSync('nickName', userInfo.nickName);
+      wx.setStorageSync('avatarUrl', userInfo.avatarUrl);
+      wx.setStorageSync('gender', userInfo.gender);
+      wx.setStorageSync('language', userInfo.language);
+      wx.setStorageSync('city', userInfo.city);
+      wx.setStorageSync('province', userInfo.province);
+      wx.setStorageSync('country', userInfo.country);
+
+      // wx.request({
+      //   url: that.globalData.pubSiteUrl + 'verifyUser', //url
+      //   method: 'GET', //请求方式
+      //   header: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   data: {
+      //     code: res.code
+      //   },
+      //   success: function (res) {
+      //     if (res.data.status == 200) {
+      //       wx.setStorageSync('session_key', res.data.data.session_key);
+      //       wx.setStorageSync('openid', res.data.data.openid);
+      //     }
+      //   }
+      // });
+
+      this.goToIndex();
+    }else{
+      wx.showToast({
+        title: '点确定~亲~',
+        image: '../../img/fail.png',
+        duration: 3000
+      })
+    }
+  },
+
+  onLoad:function(){
+    
+  },
+  onShow:function(){
+    var that = this;
+    // 可以通过 wx.getSetting 先查询一下用户是否授权了 "scope.record" 这个 scope
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userLocation']) {
+          that.getUserLocation(that);
+        }
+      }
     })
   },
   onReady: function(){
@@ -47,15 +108,16 @@ Page({
         remind: ''
       });
     }, 1000);
-    wx.onAccelerometerChange(function(res) {
-      var angle = -(res.x*30).toFixed(1);
-      if(angle>14){ angle=14; }
-      else if(angle<-14){ angle=-14; }
-      if(_this.data.angle !== angle){
-        _this.setData({
-          angle: angle
-        });
-      }
-    });
+    // wx.onAccelerometerChange(function(res) {
+    //   var angle = -(res.x*30).toFixed(1);
+    //   if(angle>14){ angle=14; }
+    //   else if(angle<-14){ angle=-14; }
+    //   if(_this.data.angle !== angle){
+    //     _this.setData({
+    //       angle: angle
+    //     });
+    //   }
+    // });
   },
+  
 });

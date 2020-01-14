@@ -11,14 +11,7 @@ Page({
     latitude: '',
     longitude: '',
     rgcData: {},
-    circles: [{
-      latitude: '',
-      longitude: '',
-      color: '#F0FFFF',
-      fillColor: '#7cb5ec88',
-      radius: 1200,
-      strokeWidth: 2
-    }],
+    circles: [],
   },
   makertap: function (e) {
     var that = this;

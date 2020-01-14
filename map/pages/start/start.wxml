@@ -13,8 +13,10 @@
       </view>
       <view class="bd">
          <image class="smalltitle" src="/static/images/more/confirm-word1.png"></image>
-        <view class="confirm-btn" bindtap='goToIndex'>
-          <text >立即体验</text>
+        <view class="confirm-btn" >
+          <!-- <text >立即体验</text> -->
+          <!-- 需要使用 button 来授权登录 -->
+          <button open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权登录</button>
         </view>
         <text class="copyright">人类的本质应该是鸽子精</text>
       </view>
