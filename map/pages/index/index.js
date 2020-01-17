@@ -13,17 +13,28 @@ Page({
     rgcData: {},
     circles: [],
   },
+
+  goToAdd: function () {
+    console.log(123213312);
+    wx.navigateTo({
+      url: "../post/post"
+    });
+    
+  },
+
   makertap: function (e) {
     var that = this;
     var id = e.markerId;
     that.showSearchInfo(wxMarkerData, id);
   },
+
   bindcallouttap: function (e) {
     console.log("头上文字被点击", e)
   },
   markertap: function (e) {
     console.log("定位的点被点击", e)
   },
+
   onLoad: function () {
     var that = this;
     var BMap = new bmap.BMapWX({
@@ -49,7 +60,7 @@ Page({
           longitude: wxMarkerData[0].longitude,
           color: '#F0FFFF',
           fillColor: '#7cb5ec88',
-          radius: 500,
+          radius: 1000,
           strokeWidth: 2
         }]
       });

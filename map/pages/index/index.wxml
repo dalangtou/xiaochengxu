@@ -1,8 +1,8 @@
 
 <view class="map_container">
   <map class="map" id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" show-location="true" markers="{{markers}}" bindmarkertap="makertap" circles="{{circles}}" bindcallouttap = "bindcallouttap" bindmarkertap="markertap">
-  <cover-view class="add_information">+</cover-view>
-  <cover-view class="about_me">消息</cover-view>
+  <cover-image class="add_m" src="../../img/add.png" bindtap="goToAdd"></cover-image>
+  <cover-image class="message" src="../../img/information.png"></cover-image>
   </map>
 
 </view>

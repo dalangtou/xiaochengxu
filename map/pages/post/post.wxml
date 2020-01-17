@@ -6,8 +6,8 @@
       <!-- 消息类别 -->
       <view class="mod t-sign-time">
         <text class="key">消息类别</text>
-        <picker bindchange="bindTypeChange" value="{{typeIndex}}" range="{{types}}">
-          <view class="value" name="types">{{types[typeIndex]}}
+        <picker bindchange="bindTypeChange" name="types" value="{{types[typeIndex]}}" range="{{types}}">
+          <view class="value">{{types[typeIndex]}}
             <image class="arrow-r" src="/static/images/arrow-r-0.png"></image>
           </view>
         </picker>
@@ -27,10 +27,25 @@
         <image class="arrow-r" src="/static/images/arrow-r-0.png"></image>
       </view>
       </view>
-       <!-- 消息主题 -->
+      <!-- 是否语音 -->
+      <view class="mod  t-early">
+          <text class="key">添加语音</text>
+          <switch type="switch" bindchange="switch3Change" name="switch_voice" checked='{{is_voice}}' />
+      </view>
+      <!-- 录音采集 -->
+      <view wx:if='{{is_voice}}'>
+        <view class="head">
+          <progress strokeWidth="4" percent="{{value}}" wx:if="{{showPg}}" ></progress>
+          <view class="dot {{isTouchStart==true?'dot-blowup':''}} {{isTouchEnd==true?'dot-zoomout':''}}" style="display:{{isDot}}"></view>
+          <view class="record" bindtouchstart="recordStart" bindtouchend="recordTerm">
+            <image mode="widthFix" src="../../img/record.png"></image>
+          </view>
+        </view>
+      </view>
+       <!-- 限制人群 -->
       <view class="mod t-name">
-        <text class="key">消息范围</text>
-        <picker bindchange="bindRangeChange" value="{{rangeIndex}}" range="{{range}}">
+        <text class="key">限制人群</text>
+        <picker bindchange="bindRangeChange" name="confine" value="{{range[rangeIndex]}}" range="{{range}}">
           <view class="value" name="types">{{range[rangeIndex]}}
             <image class="arrow-r" src="/static/images/arrow-r-0.png"></image>
           </view>
@@ -40,26 +55,11 @@
       <!-- 有效时间 -->
       <view class="mod t-name">
         <text class="key">有效时长</text>
-        <picker bindchange="bindlengthChange" value="{{timelengthIndex}}" range="{{timelength}}">
-          <view class="value" name="types">{{timelength[timelengthIndex]}}天
+        <picker bindchange="bindlengthChange" name="time" value="{{timelength[timelengthIndex]}}" range="{{timelength}}">
+          <view class="value" name="types">{{timelength[timelengthIndex]}}小时
             <image class="arrow-r" src="/static/images/arrow-r-0.png"></image>
           </view>
         </picker>
-      </view>
-
-      <!-- 限制人数 -->
-      <view class="mod  t-early">
-        <text class="key">限制接收人数</text>
-        <switch type="switch" bindchange="switch1Change" name="switchHide" />
-      </view>
-
-      <!-- 人数设置 -->
-      <view wx:if="{{peopleHide}}">
-        <view class="mod t-name">
-          <text class="key">人数设置</text>
-          <input name="peoplenum" type="number" class="input" maxlength="100" placeholder='请输入人数' value="{{peoplenum}}" />
-          <image class="arrow-r" src="/static/images/arrow-r-0.png"></image>
-        </view>
       </view>
     </view>
 
@@ -71,12 +71,14 @@
       </view>
     </view>
     <view class="add_pic" bindtap="uploadPic" wx-if="{{!isSrc}}">
-      <view>添加图片（选）</view>
+      <view>选择图片<image src="../../img/photo.png" style="height: 90rpx;width: 120rpx"></image></view>
     </view>
     <view wx:if="{{isSrc}}" class="image_box">
       <view class="picPre">
-        <image src="{{src}}" mode="aspectFit"></image>
-        <view bindtap="clearPic"></view>
+        <input name="isSrc" value="{{isSrc}}" hidden="ture"></input>
+        <input name="src" value="{{src}}" hidden="ture"></input>
+        <image class="user_upload" src="{{src}}" mode="aspectFit"></image>
+        <image class="annul" bindtap="clearPic" src="../../img/fail.png" style="height: 40rpx;width: 40rpx;"></image>
       </view>
     </view>
    <view class="submit-btn">

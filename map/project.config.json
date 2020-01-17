@@ -31,13 +31,18 @@
 		"game": {
 			"list": []
 		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
 			"current": 0,
 			"list": [
 				{
-					"id": -1,
-					"name": "index",
-					"pathName": "pages/index/index",
+					"id": 0,
+					"name": "pages/post/post",
+					"pathName": "pages/post/post",
+					"query": "",
 					"scene": null
 				}
 			]

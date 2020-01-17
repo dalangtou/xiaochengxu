@@ -14,27 +14,21 @@
     padding: 0 5px;
 }
 
-.add_information{
+.add_m{
   position: fixed;
-  bottom: 50rpx;
-  right: 50rpx;   
-  background-color: #ff5722;
-  color: #FFFFFF;
-  padding: 10rpx;
-  width: 50rpx;
-  height: 50rpx;
-  border-radius: 50rpx;
+  bottom: 70rpx;
+  right: 70rpx;   
+  width: 70rpx;
+  height:70rpx;
+  border-radius: 70rpx;
 }
 
-.about_me{
+.message{
   position: fixed;
-  bottom: 150rpx;
-  right: 50rpx;   
-  background-color: #ff5722;
-  color: #FFFFFF;
+  bottom: 210rpx;
+  right: 70rpx;   
   margin: 0;
-  padding: 10rpx;
-  width: 50rpx;
-  height: 50rpx;
-  border-radius: 50rpx;
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 10rpx;
 }

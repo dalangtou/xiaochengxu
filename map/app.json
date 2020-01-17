@@ -43,12 +43,6 @@
         "selectedIconPath": "static/images/tar-home-on.png"
       },
       {
-        "pagePath": "pages/post/post",
-        "text": "发送",
-        "iconPath": "static/images/tar-about.png",
-        "selectedIconPath": "static/images/tar-about-on.png"
-      },
-      {
         "pagePath": "pages/message/message",
         "text": "设置",
         "iconPath": "static/images/tar-topic.png",

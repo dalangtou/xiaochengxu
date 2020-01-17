@@ -6,6 +6,7 @@ use App\Http\Controllers\Base\BaseController;
 use App\Http\Extend\GeoHash;
 use App\Models\Comment;
 use App\Models\Information;
+use App\Models\Tags;
 use Illuminate\Http\Request;
 use mysql_xdevapi\Collection;
 
@@ -13,12 +14,14 @@ class InformationController extends BaseController
 {
     public $mInformation;
     public $mComment;
+    public $mTags;
 
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->mInformation = new Information();
         $this->mComment = new Comment();
+        $this->mTags = new Tags();
     }
 
     //附近列表
@@ -154,6 +157,19 @@ class InformationController extends BaseController
 //                'padding'=>'10',
 //            ];
         });
+    }
+
+    public function postInfo()
+    {
+        $tags = $this->mTags->getValidTags();
+
+        $data = [
+            'tags'=>$tags,
+            'confine'=>['无', '仅男性可见', '仅女性可见', '18~25岁', '我的标记*'],
+            'time'=>[2,4,10,24,72],
+        ];
+
+        return $this->_response(200,config('code.200'), $data);
     }
 
 }
