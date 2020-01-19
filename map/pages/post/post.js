@@ -11,6 +11,8 @@ function formate_data(myDate) {
     + myDate.getDate()
   return formate_result;
 };
+const myaudio = wx.createInnerAudioContext();
+const RecorderManager = wx.getRecorderManager();
 
 Page({
   /**
@@ -20,7 +22,6 @@ Page({
     notice_status: false,
     accounts: ["微信号", "QQ号", "手机号"],
     accountIndex: 0,
-    // peopleHide: false,
     islocal:true,
     isAgree: false,
     date: formate_data(myDate),
@@ -44,13 +45,14 @@ Page({
     slocalx: 0,
     slocaly: 0,
     url:'',
-    isSrc:false,
     picturename:'',
-    ischecked:true,
+    ischecked: true,
+    isSrc: false,
     src: "",
     is_voice: false,
     hint_voice: '长按录制语音',
     voice_path: '',
+    voice_len: 0,
     hasRecord: false,
     isDot: "block",
     isTouchStart: false,
@@ -76,6 +78,22 @@ Page({
       'notice_status': false
     });
   },
+  toplay: function(e){
+    myaudio.src = this.data.voice_path;
+    console.log(myaudio);
+    myaudio.play(); 
+    myaudio.onPlay((res) => {
+      console.log('播放!');
+    })
+    myaudio.onEnded((res) => {
+      console.log('播放结束!');
+    })
+    myaudio.onError((res) => {
+      console.log(res.errMsg)
+      console.log(res.errCode)
+    })
+  },
+
 
 
   //字数改变触发事件
@@ -121,6 +139,19 @@ Page({
         }
       }
     });
+
+    wx.getLocation({
+      type: 'wgs84',
+      success: function (res) {
+        var latitude = res.latitude
+        var longitude = res.longitude
+        that.setData({
+          localy: latitude,
+          localx: longitude,
+          address: '用户当前位置'
+        })
+      },
+    });
   },
 
   /**
@@ -137,7 +168,7 @@ Page({
     var myInterval = setInterval(getReturn, 500); ////半秒定时查询
     function getReturn() {
       wx.getStorage({
-        key: 'user_openid',
+        key: 'openid',
         success: function (ress) {
           if (ress.data) {
             clearInterval(myInterval)
@@ -171,22 +202,10 @@ Page({
   clearPic: function () {//删除图片
     that.setData({
       isSrc: false,
-      surl: ""
+      src: ""
     })
   },
 
-  //限制人数
-  // switch1Change: function (e) {
-  //   if (e.detail.value == false) {
-  //     this.setData({
-  //       peopleHide: false
-  //     })
-  //   } else if (e.detail.value == true) {
-  //     this.setData({
-  //       peopleHide: true
-  //     })
-  //   }
-  // },
   //是否当前位置
   switch2Change: function (e) {
     if (e.detail.value == false) {
@@ -213,13 +232,10 @@ Page({
           var latitude = res.latitude
           var longitude = res.longitude
           that.setData({
-            localy: latitude * 100000,
-            localx: longitude * 100000,
+            localy: latitude,
+            localx: longitude,
             address:'用户当前位置'
           })
-          console.log('用户当前位置');
-          console.log('x' + that.data.localx);
-          console.log('y' + that.data.localy);
         },
       })
     }
@@ -230,7 +246,7 @@ Page({
       wx.authorize({
         scope: "scope.record",
         success: function () {
-          console.log("录音授权成功");
+          // console.log("录音授权成功");
           that.setData({
             is_voice: true,
             hint_voice: '长按录制语音',
@@ -247,19 +263,19 @@ Page({
     }
   },
   
-  // 点击录音按钮
-  onRecordClick: function () {
-    wx.getSetting({
-      success: function (t) {
-        console.log(t.authSetting), t.authSetting["scope.record"] ? console.log("已授权录音") : (console.log("未授权录音"),
-          wx.openSetting({
-            success: function (t) {
-              console.log(t.authSetting);
-            }
-          }));
-      }
-    });
-  },
+  // // 点击录音按钮
+  // onRecordClick: function () {
+  //   wx.getSetting({
+  //     success: function (t) {
+  //       console.log(t.authSetting), t.authSetting["scope.record"] ? console.log("已授权录音") : (console.log("未授权录音"),
+  //         wx.openSetting({
+  //           success: function (t) {
+  //             console.log(t.authSetting);
+  //           }
+  //         }));
+  //     }
+  //   });
+  // },
   /**
    * 长按录音开始
    */
@@ -271,9 +287,8 @@ Page({
       isTouchEnd: false,
       showPg: true,
     })
-    wx.startRecord({
+    wx.startRecord([format ='mp3'])({
       success(res) {
-        console.log(res.tempFilePath)
         n.setData({
           voice_path: res.tempFilePath
         })
@@ -287,9 +302,8 @@ Page({
       n.setData({
         value: n.data.value - 100 / 1500
       }), 
-      (o += 10) >= 1e3 && o % 1e3 == 0 && (a-- , console.log(a), a <= 0 && (rm.stop(),
+        (o += 10) >= 1e3 && o % 1e3 == 0 && (a-- , console.log(a), a <= 0 && (n.recordTerm(e),
         clearInterval(n.timer), n.setData({
-          animationData: n.animation2.export(),
           showPg: false,
         })));
     }, 10);
@@ -306,7 +320,8 @@ Page({
       touchEnd: e.timeStamp,
       showPg: false,
       value: 100
-    }), clearInterval(this.timer);
+    })
+    clearInterval(this.timer)
   },
 
   //改变消息类别
@@ -334,16 +349,14 @@ Page({
       success: function (res) {
         that.setData({
           address: res.name,
-          localx: res.longitude*100000, //经度
-          localy: res.latitude * 100000,//纬度
-          slocalx: res.longitude * 100000, //存经度
-          slocaly: res.latitude * 100000,//存纬度
+          localx: res.longitude, //经度
+          localy: res.latitude,//纬度
+          slocalx: res.longitude, //存经度
+          slocaly: res.latitude,//存纬度
         })
         if (e.detail && e.detail.value) {
           this.data.address = e.detail.value;
         }
-        console.log('x' + that.data.localx);
-        console.log('y' + that.data.localy);
       },
       fail: function (e) {
       },
@@ -353,7 +366,6 @@ Page({
   },
   addressChange: function (e) {
     console.log('sssss');
-    this.addressChoose(e);
   },
   
   //表单验证
@@ -371,24 +383,32 @@ Page({
   //提交表单
   submitForm: function (e) {
     var that = this;
-    var title = '';
-    var address = this.data.address
     var typeIndex = this.data.typeIndex;
-    var acttype = 1 + parseInt(typeIndex);
-    var acttypename = getTypeName(acttype); //获得类型名称
-    var rangeIndex = this.data.rangeIndex;//获得消息范围
-    var range = this.data.range
+    var acttype = parseInt(typeIndex);//类别下标
+    var acttypename = this.data.types[acttype]; //获得类型名称
+
+    var rangeIndex = this.data.rangeIndex;//限制人群
     var rangenum = parseInt(rangeIndex)
-    var distance =  range[rangenum]
+    var distance = this.data.range[rangenum]
+
     var timelengthIndex = this.data.timelengthIndex;//获得有效时长
-    var timelength = this.data.timelength
     var timelengthnum = parseInt(timelengthIndex)
-    var length = timelength[timelengthnum]
+    var length = this.data.timelength[timelengthnum]
+
+    var address = this.data.address
     var localx = this.data.localx; //经度
     var localy = this.data.localy;//纬度
-    var switchHide = e.detail.value.switchHide;
-    var content = e.detail.value.content;
-    var src = this.data.src;
+
+    var switchHide = e.detail.value.switchHide;//当前位置按钮
+
+    var content = e.detail.value.content;//内容
+
+    var is_voice = this.data.is_voice;
+    var voice_path = this.data.voice_path;//录音路径
+
+    var isSrc = this.data.isSrc;
+    var src = this.data.src;//图片 数组!
+    
     if (address == '点击选择位置') {
       this.setData({
         showTopTips: true,
@@ -398,6 +418,11 @@ Page({
       this.setData({
         showTopTips: true,
         TopTips: '请输入消息内容'
+      });
+    } else if (is_voice == true && voice_path == '') {
+      this.setData({
+        showTopTips: true,
+        TopTips: '请输入语音消息'
       });
     } else {
       console.log('校验完毕');
@@ -455,18 +480,3 @@ Page({
 
   }
 })
-
-//根据活动类型获取活动类型名称
-function getTypeName(acttype) {
-  var acttypeName = "";
-  if (acttype == 1) acttypeName = "运动";
-  else if (acttype == 2) acttypeName = "游戏";
-  else if (acttype == 3) acttypeName = "交友";
-  else if (acttype == 4) acttypeName = "旅行";
-  else if (acttype == 5) acttypeName = "读书";
-  else if (acttype == 6) acttypeName = "竞赛";
-  else if (acttype == 7) acttypeName = "电影";
-  else if (acttype == 8) acttypeName = "音乐";
-  else if (acttype == 9) acttypeName = "其他";
-  return acttypeName;
-}

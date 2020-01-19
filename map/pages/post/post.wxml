@@ -33,14 +33,20 @@
           <switch type="switch" bindchange="switch3Change" name="switch_voice" checked='{{is_voice}}' />
       </view>
       <!-- 录音采集 -->
-      <view wx:if='{{is_voice}}'>
+      <view wx:if='{{is_voice && !voice_path}}'>
         <view class="head">
+        <view wx:if='{{!voice_path}}'>
           <progress strokeWidth="4" percent="{{value}}" wx:if="{{showPg}}" ></progress>
           <view class="dot {{isTouchStart==true?'dot-blowup':''}} {{isTouchEnd==true?'dot-zoomout':''}}" style="display:{{isDot}}"></view>
           <view class="record" bindtouchstart="recordStart" bindtouchend="recordTerm">
             <image mode="widthFix" src="../../img/record.png"></image>
           </view>
         </view>
+        </view>
+      </view>
+      <view class="mod t-name" wx:if='{{is_voice && voice_path}}'>
+        <view class='key'>MP3</view>
+        <view class="value" ><view class='invite2'><image class='invite' bindtap="toplay" src="../../img/play.png"></image><image class="annul" bindtap="clearPic" src="../../img/fail.png" style="height: 40rpx;width: 40rpx;right: 10%;"></image></view> </view>
       </view>
        <!-- 限制人群 -->
       <view class="mod t-name">
@@ -51,7 +57,6 @@
           </view>
         </picker>
       </view>
-
       <!-- 有效时间 -->
       <view class="mod t-name">
         <text class="key">有效时长</text>

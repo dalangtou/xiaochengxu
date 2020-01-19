@@ -392,3 +392,17 @@ overflow:hidden;
   background: transparent;
   transform: translate(-50%, -50%);
 }
+
+.invite {
+  /* display: none; */
+  width: 70rpx;
+  height: 70rpx;
+  margin: 20rpx;
+  padding-right: 20rpx;
+  border-radius: 70rpx;
+}
+
+.invite2 {
+  float: right;
+  position: relative;
+}
