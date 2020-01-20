@@ -106,11 +106,11 @@ App({
   Touches: new Touches(),
   util: __utils,
   globalData:{
-    pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
-    // pubSiteUrl: "http://program-api.com/",//本地
+    // pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
+    pubSiteUrl: "http://program-api.com/",//本地
     token:'122b86a4c20dd9ccab58c48042d1f7fd',
   },
-  uploadfile: function (path) {
+  uploadfile: function (path,other,type) {
     var that = this;
     var newpath = '';
     wx.uploadFile({
@@ -129,6 +129,8 @@ App({
         
         if(res.status == 200){
           newpath = res.data;
+          console.log(newpath);
+          other.upBack(other, newpath,type)
         }
       },
       fail:function(res){
@@ -139,6 +141,5 @@ App({
         })
       }
     });
-    return newpath;
   },
 })
