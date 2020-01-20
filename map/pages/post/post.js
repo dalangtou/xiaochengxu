@@ -94,8 +94,6 @@ Page({
     })
   },
 
-
-
   //字数改变触发事件
   bindTextAreaChange: function (e) {
     var that = this
@@ -128,6 +126,7 @@ Page({
       method: 'GET', //请求方式
       header: {
         'Content-Type': 'application/json',
+        'token': app.globalData.token,
       },
       success: function (res) {
         if (res.data.status == 200) {
@@ -263,19 +262,6 @@ Page({
     }
   },
   
-  // // 点击录音按钮
-  // onRecordClick: function () {
-  //   wx.getSetting({
-  //     success: function (t) {
-  //       console.log(t.authSetting), t.authSetting["scope.record"] ? console.log("已授权录音") : (console.log("未授权录音"),
-  //         wx.openSetting({
-  //           success: function (t) {
-  //             console.log(t.authSetting);
-  //           }
-  //         }));
-  //     }
-  //   });
-  // },
   /**
    * 长按录音开始
    */
@@ -286,16 +272,19 @@ Page({
       isTouchStart: true,
       isTouchEnd: false,
       showPg: true,
-    })
-    wx.startRecord([format ='mp3'])({
-      success(res) {
-        n.setData({
-          voice_path: res.tempFilePath
-        })
-      },
-    })
+    });
+    var parame = {
+      duration: 600000,
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      encodeBitRate: 192000,
+      format: 'mp3',
+      frameSize: 50
+    }
+    RecorderManager.start(parame)
+
     setTimeout(function () {
-      wx.stopRecord() // 结束录音
+      RecorderManager.stop()
     }, 15000)
     var a = 15, o = 10;
     this.timer = setInterval(function () {
@@ -312,7 +301,13 @@ Page({
    * 长按录音结束
    */
   recordTerm: function (e) {
-    wx.stopRecord() // 结束录音
+  var that = this;
+    RecorderManager.stop()
+    RecorderManager.onStop((res) => {
+      this.setData({
+        voice_path: res.tempFilePath,
+      })
+    })
 
     this.setData({
       isTouchEnd: true,
@@ -425,7 +420,14 @@ Page({
         TopTips: '请输入语音消息'
       });
     } else {
-      console.log('校验完毕');
+      if (is_voice) {
+        voice_path = app.uploadfile(voice_path);
+      }
+      if (isSrc) {
+        console.log(app);
+        src = app.uploadfile(src);
+      }
+      console.log('校验完毕', src, voice_path);
       // that.setData({
       //   isLoading: true,
       //   isdisabled: true

@@ -15,7 +15,6 @@ Page({
   },
 
   goToAdd: function () {
-    console.log(123213312);
     wx.navigateTo({
       url: "../post/post"
     });
@@ -65,13 +64,12 @@ Page({
         }]
       });
 
-      console.log(wxMarkerData[0].latitude, wxMarkerData[0].longitude)
-
       wx.request({
         url: app.globalData.pubSiteUrl + 'Info/list', //url
         method: 'GET', //请求方式
         header: {
           'Content-Type': 'application/json',
+          'token': app.globalData.token,
         },
         data: {
           // activityId: options.id,  //参数

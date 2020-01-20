@@ -29,6 +29,7 @@ App({
                 method: 'GET', //请求方式
                 header: {
                   'Content-Type': 'application/json',
+                  'token': that.globalData.token,
                 },
                 data: {
                   code: res.code
@@ -107,5 +108,26 @@ App({
   globalData:{
     // pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
     pubSiteUrl: "http://program-api.com/",//本地
+    token:'122b86a4c20dd9ccab58c48042d1f7fd',
+  },
+  uploadfile: function (path) {
+    var that = this;
+    var newpath = '';
+    wx.uploadFile({
+      url: that.globalData.pubSiteUrl + 'Info/uploadFile', //url,
+      filePath: path,
+      name: 'file',
+      header: {
+        'Content-Type': 'application/json',
+        'token': app.globalData.token,
+      },
+      success: function (res) { 
+        console.log(res);
+        if(res.status == 200){
+          newpath = res.data;
+        }
+      }
+    });
+    return newpath;
   },
 })

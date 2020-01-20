@@ -45,7 +45,7 @@
         </view>
       </view>
       <view class="mod t-name" wx:if='{{is_voice && voice_path}}'>
-        <view class='key'>MP3</view>
+        <view class='key'>voice</view>
         <view class="value" ><view class='invite2'><image class='invite' bindtap="toplay" src="../../img/play.png"></image><image class="annul" bindtap="clearPic" src="../../img/fail.png" style="height: 40rpx;width: 40rpx;right: 10%;"></image></view> </view>
       </view>
        <!-- 限制人群 -->

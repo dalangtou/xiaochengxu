@@ -44,7 +44,6 @@ Page({
 
   getUserInfo:function(e){
     
-    console.log(e);
     if (e.detail.errMsg == "getUserInfo:ok"){
       var str = e.detail.rawData;
       var userInfo = JSON.parse(str);

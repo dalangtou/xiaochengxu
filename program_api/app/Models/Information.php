@@ -13,7 +13,7 @@ class Information extends Model
     protected $table = 'information';
     protected $guarded = [];
 
-    const DEF_VALID_TIME = 72000;
+    const DEF_VALID_TIME = 2;  //单位小时
 
     public function tag()
     {

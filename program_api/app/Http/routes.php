@@ -16,7 +16,7 @@
 //});
 
 //accessToken严格模式
-Route::group([], function () {
+Route::group(['middleware'=>'header'], function () {
 
     Route::group(['prefix' => 'user', 'namespace' => '\User'], function () {
         Route::post('/login', 'UserController@login');
@@ -27,6 +27,7 @@ Route::group([], function () {
         Route::post('/post', 'InformationController@post');
         Route::post('/comment', 'InformationController@comment');
         Route::post('/update', 'InformationController@update');
+        Route::post('/uploadFile', 'InformationController@uploadFile');
     });
 });
 

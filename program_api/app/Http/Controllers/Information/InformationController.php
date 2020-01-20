@@ -7,6 +7,7 @@ use App\Http\Extend\GeoHash;
 use App\Models\Comment;
 use App\Models\Information;
 use App\Models\Tags;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use mysql_xdevapi\Collection;
 
@@ -48,9 +49,14 @@ class InformationController extends BaseController
 
         $data['i_geohash'] = GeoHash::encode($data['i_latitude'], $data['i_longitude']);
 
-        $data['i_type'] = isset($data['img']) ? 1 : 0;
+        $data['i_type'] = 0;
+        $data['i_type'] = isset($data['img']) ? 1 : $data['i_type'];
+        $data['i_type'] = isset($data['voice']) ? 2 : $data['i_type'];
+        $data['i_type'] = isset($data['video']) ? 3 : $data['i_type'];
 
-        $data['i_stale_at'] = isset($data['i_stale_at']) ? $data['i_stale_at'] : date('Y/m/d H:i:s', time()+Information::DEF_VALID_TIME);
+        $data['i_stale_at'] = isset($data['i_stale_at']) ?
+            Carbon::parse("+{$data['i_stale_at']} hours")->toDateTimeString() :
+            Carbon::parse('+'.Information::DEF_VALID_TIME.' hours')->toDateTimeString();
 
         $res = $this->mInformation->post($data);
 
@@ -170,6 +176,31 @@ class InformationController extends BaseController
         ];
 
         return $this->_response(200,config('code.200'), $data);
+    }
+
+    public function uploadFile()
+    {
+        if (! $this->request->hasFile('photo') && $this->request->file('photo')->isValid()) return $this->_response(1001,config('code.1001'));
+
+        $file = $this->request->file('photo');
+
+        // 获取后缀名
+        $ext = $file->getClientOriginalExtension();
+
+        switch ($ext){
+            case 'mp3':
+                $dir = './voice';break;
+            case 'mp4':
+                $dir = './video';break;
+            default :
+                $dir = './photo';break;
+        }
+        // 新文件名
+        $saveName = time() . rand() . "." . $ext;
+
+        $newFile = $file->move($dir, $saveName);
+
+        return $this->_response(200,config('code.200'), $newFile->getPath().'/'.$newFile->getBasename());
     }
 
 }
