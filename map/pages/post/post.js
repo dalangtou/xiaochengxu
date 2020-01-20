@@ -424,15 +424,14 @@ Page({
         voice_path = app.uploadfile(voice_path);
       }
       if (isSrc) {
-        console.log(app);
-        src = app.uploadfile(src);
+        src = app.uploadfile(src[0]);
       }
       console.log('校验完毕', src, voice_path);
       // that.setData({
       //   isLoading: true,
       //   isdisabled: true
       // })
-      console.log(e, src);
+
       //向 news 表中新增一条数据
       // wx.getStorage({
       //   key: 'my_nick',

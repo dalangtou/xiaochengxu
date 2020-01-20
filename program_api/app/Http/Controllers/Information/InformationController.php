@@ -180,9 +180,9 @@ class InformationController extends BaseController
 
     public function uploadFile()
     {
-        if (! $this->request->hasFile('photo') && $this->request->file('photo')->isValid()) return $this->_response(1001,config('code.1001'));
+        if (! $this->request->hasFile('file')) return $this->_response(1001,config('code.1001'));
 
-        $file = $this->request->file('photo');
+        $file = $this->request->file('file');
 
         // 获取后缀名
         $ext = $file->getClientOriginalExtension();

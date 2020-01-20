@@ -106,8 +106,8 @@ App({
   Touches: new Touches(),
   util: __utils,
   globalData:{
-    // pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
-    pubSiteUrl: "http://program-api.com/",//本地
+    pubSiteUrl: "http://www.eternity999.cn/shaokang/xiaochengxu/program_api/public/",//服务器
+    // pubSiteUrl: "http://program-api.com/",//本地
     token:'122b86a4c20dd9ccab58c48042d1f7fd',
   },
   uploadfile: function (path) {
@@ -118,14 +118,25 @@ App({
       filePath: path,
       name: 'file',
       header: {
-        'Content-Type': 'application/json',
-        'token': app.globalData.token,
+        'token': that.globalData.token,
+      }, 
+      formData: {
+        'key': 'aaadd'//这里是为文件设置上传后的文件名
       },
-      success: function (res) { 
-        console.log(res);
+      success: function (res) {
+        var str = res.data;
+        var res = JSON.parse(str);
+        
         if(res.status == 200){
           newpath = res.data;
         }
+      },
+      fail:function(res){
+        wx.showToast({
+          title: '未知错误',
+          image: '../../img/fail.png',
+          duration: 3000
+        })
       }
     });
     return newpath;
