@@ -6,9 +6,11 @@ use App\Http\Controllers\Base\BaseController;
 use App\Http\Extend\GeoHash;
 use App\Models\Comment;
 use App\Models\Information;
+use App\Models\Infect;
 use App\Models\Tags;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Collection;
 
 class InformationController extends BaseController
@@ -16,6 +18,7 @@ class InformationController extends BaseController
     public $mInformation;
     public $mComment;
     public $mTags;
+    public $mInfect;
 
     public function __construct(Request $request)
     {
@@ -23,6 +26,7 @@ class InformationController extends BaseController
         $this->mInformation = new Information();
         $this->mComment = new Comment();
         $this->mTags = new Tags();
+        $this->mInfect = new Infect();
     }
 
     //附近列表
@@ -201,6 +205,60 @@ class InformationController extends BaseController
         $newFile = $file->move($dir, $saveName);
 
         return $this->_response(200,config('code.200'), $newFile->getPath().'/'.$newFile->getBasename());
+    }
+
+    public function specialInfo()
+    {
+        header("Content-Type: text/html; charset=utf-8");
+
+        $province = $this->request->input('province');//省
+        $city = $this->request->input('city');//市
+        $district = $this->request->input('district');//区,县
+
+        $data = [
+            'province'=>$province,
+            'city'=>$city,
+            'district'=>$district,
+        ];
+        $infect = $this->mInfect->where($data)->first();
+        if(empty($infect)){
+            $APIKEY = env('TX_KEY');
+            $url = "http://api.tianapi.com/txapi/ncovnearby/index?key={$APIKEY}&province={$province}&city={$city}&district={$district}";
+    
+            $info = file_get_contents ($url);//API接口
+            $json = json_decode($info,true);//将json解析成数组
+            if($json['code'] == 200){ //判断状态码
+                $list = $json['newslist'];
+                $data['data'] = json_encode($list);
+                $this->mInfect->insert($data);
+            }else{	
+                $list = [];
+                Log::info("返回错误，状态消息：".$json['msg']);
+            }
+        }else{
+            $list = json_decode($infect->data,true);
+        }
+
+        if(!empty($list)) $list = $this->clearList($list);
+        return $this->_response(200,config('code.200'), $list);
+        
+    }
+
+    public function clearList($list)
+    {
+        $arr = [];
+        foreach($list as $k=>&$v){
+            $arr[$k]['id'] = $k+1;
+            $arr[$k]['longitude'] = $v['lng'];
+            $arr[$k]['latitude'] = $v['lat'];
+            $arr[$k]['locale'] = $v['locale'];
+            $arr[$k]['address'] = $v['address'];
+            $arr[$k]['source'] = $v['source'];
+
+            $arr[$k]['iconPath'] = '../../img/virus.png';
+            $arr[$k]['iconTapPath'] = '../../img/virus.png';
+        }
+        return $arr;
     }
 
 }

@@ -12,6 +12,7 @@ Page({
     longitude: '',
     rgcData: {},
     circles: [],
+    virus:[],
   },
 
   goToAdd: function () {
@@ -28,10 +29,16 @@ Page({
   },
 
   bindcallouttap: function (e) {
-    console.log("头上文字被点击", e)
+    console.log("头上文字被点击", e);
   },
   markertap: function (e) {
-    console.log("定位的点被点击", e)
+    console.log("定位的点被点击", e);
+    var id = e.markerId-1;
+    wx.showModal({
+      title: this.data.virus[id]['source'],
+      content: this.data.virus[id]['locale'] +',\r\n'+ this.data.virus[id]['address'],
+      showCancel: false,
+    })
   },
 
   onLoad: function () {
@@ -81,6 +88,34 @@ Page({
           if (res.data.status == 200) {
             that.setData({
               markers: that.data.markers.concat(res.data.data),
+            })
+          }
+        },
+        fail: function () {
+          app.consoleLog("请求数据失败");
+        },
+        complete: function () {
+          // complete 
+        }
+      });
+
+      wx.request({
+        url: app.globalData.pubSiteUrl + 'Info/special', //url
+        method: 'GET', //请求方式
+        header: {
+          'Content-Type': 'application/json',
+          'token': app.globalData.token,
+        },
+        data: {
+          province: '上海市',
+          city: '上海市',
+          district: '嘉定区',
+        },
+        success: function (res) {
+          if (res.data.status == 200) {
+            that.setData({
+              markers: that.data.markers.concat(res.data.data),
+              virus: res.data.data,
             })
           }
         },

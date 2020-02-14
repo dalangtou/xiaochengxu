@@ -28,6 +28,8 @@ Route::group(['middleware'=>'header'], function () {
         Route::post('/comment', 'InformationController@comment');
         Route::post('/update', 'InformationController@update');
         Route::post('/uploadFile', 'InformationController@uploadFile');
+        
+        Route::get('/special', 'InformationController@specialInfo');
     });
 });
 
