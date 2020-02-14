@@ -25,7 +25,7 @@ class UserController extends BaseController
     {
         $data = $this->request->all();
 
-        $info = $this->mUser->where('phone', $data['phone'])->first();
+        $info = $this->mUser->where('openid', $data['openid'])->first();
 
         if (!is_null($info)) $this->login();
 
@@ -55,9 +55,15 @@ class UserController extends BaseController
     {
         $data = $this->request->all();
 
-        $info = $this->mUser->where('phone', $data['phone'])->first();
+        $info = $this->mUser->where('openid', $data['openid'])->first();
 
         if (is_null($info)) return $this->sign();
+
+        // unset($data['openid']);
+        
+        // $info->update($data);
+
+        // $info = $this->mUser->where('openid', $data['openid'])->first();
 
         $info = $info->load('detail');
 

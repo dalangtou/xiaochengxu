@@ -106,8 +106,8 @@ App({
   Touches: new Touches(),
   util: __utils,
   globalData:{
-    pubSiteUrl: "http://www.eternity999.cn/shaokang/test/xiaochengxu/program_api/public/",//服务器
-    // pubSiteUrl: "http://program-api.com/",//本地
+    // pubSiteUrl: "http://www.eternity999.cn/shaokang/test/xiaochengxu/program_api/public/",//服务器
+    pubSiteUrl: "http://program-api.com/",//本地
     token:'122b86a4c20dd9ccab58c48042d1f7fd',
   },
   uploadfile: function (path,other,type) {

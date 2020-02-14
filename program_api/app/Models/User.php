@@ -23,7 +23,6 @@ class User extends Model
     {
         $data = [
             'we_name'=>$arr['we_name'],
-            'phone'=>$arr['phone'],
             'avatar'=>$arr['avatar'],
             'country'=>$arr['country'],
             'province'=>$arr['province'],

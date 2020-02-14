@@ -59,22 +59,30 @@ Page({
       wx.setStorageSync('province', userInfo.province);
       wx.setStorageSync('country', userInfo.country);
 
-      // wx.request({
-      //   url: that.globalData.pubSiteUrl + 'verifyUser', //url
-      //   method: 'GET', //请求方式
-      //   header: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   data: {
-      //     code: res.code
-      //   },
-      //   success: function (res) {
-      //     if (res.data.status == 200) {
-      //       wx.setStorageSync('session_key', res.data.data.session_key);
-      //       wx.setStorageSync('openid', res.data.data.openid);
-      //     }
-      //   }
-      // });
+      wx.request({
+        url: app.globalData.pubSiteUrl + 'user/login', //url
+        method: 'POST', //请求方式
+        header: {
+          'Content-Type': 'application/json',
+          'token': app.globalData.token,
+        },
+        data: {
+          we_name: userInfo.nickName,
+          avatar: userInfo.avatarUrl,
+          country: userInfo.country,
+          province: userInfo.province,
+          city: userInfo.city,
+          language: userInfo.language,
+          openid: wx.getStorageSync('openid'),
+          latitude: wx.getStorageSync('latitude'),
+          longitude: wx.getStorageSync('longitude'),
+        },
+        success: function (res) {
+          if (res.data.status == 200) {
+            // console.log(res.data.data)
+          }
+        }
+      });
 
       this.goToIndex();
     }else{
