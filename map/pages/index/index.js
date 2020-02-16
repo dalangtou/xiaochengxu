@@ -13,6 +13,7 @@ Page({
     rgcData: {},
     circles: [],
     virus:[],
+    site:[],
   },
 
   goToAdd: function () {
@@ -52,7 +53,8 @@ Page({
     var success = function (data) {
       wxMarkerData = data.wxMarkerData;
       that.setData({
-        markers: wxMarkerData
+        markers: wxMarkerData,
+        site: data.originalData.result.addressComponent,
       });
       that.setData({
         latitude: wxMarkerData[0].latitude
@@ -107,15 +109,28 @@ Page({
           'token': app.globalData.token,
         },
         data: {
-          province: '上海市',
-          city: '上海市',
-          district: '嘉定区',
+          province: that.data.site.province,
+          city: that.data.site.city,
+          district: that.data.site.district,
         },
         success: function (res) {
           if (res.data.status == 200) {
+            if(res.data.data.length == 0){
+              wx.showModal({
+                title: '系统通知',
+                content: '当前区域没有异常或受到管理影响暂无数据!',
+                showCancel: false,
+              })
+            }
             that.setData({
               markers: that.data.markers.concat(res.data.data),
               virus: res.data.data,
+            })
+          }else{
+            wx.showModal({
+              title: '系统通知',
+              content: '当前请求人数过多请稍后再试!',
+              showCancel: false,
             })
           }
         },

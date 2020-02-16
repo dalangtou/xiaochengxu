@@ -406,74 +406,79 @@ Page({
     var isSrc = this.data.isSrc;
     var src = this.data.src;//图片 数组!
     
-    if (address == '点击选择位置') {
-      this.setData({
-        showTopTips: true,
-        TopTips: '请选择地点'
-      });
-    } else if (content == "") {
-      this.setData({
-        showTopTips: true,
-        TopTips: '请输入消息内容'
-      });
-    } else if (is_voice == true && voice_path == '') {
-      this.setData({
-        showTopTips: true,
-        TopTips: '请输入语音消息'
-      });
-    } else {
-      if (isSrc) {
-        app.uploadfile(src[0], this, 1);
-        src = this.data.new_src;
-      }
-      if (is_voice) {
-        app.uploadfile(voice_path,this, 2);
-        voice_path = this.data.new_voice_path;
-      }
-      console.log('校验完毕', src, voice_path);
-      that.setData({
-        isLoading: true,
-        isdisabled: true
-      })
+    wx.showModal({
+      title: '系统通知',
+      content: '敬请期待!玩命研发中!',
+      showCancel: false,
+    })
+    // if (address == '点击选择位置') {
+    //   this.setData({
+    //     showTopTips: true,
+    //     TopTips: '请选择地点'
+    //   });
+    // } else if (content == "") {
+    //   this.setData({
+    //     showTopTips: true,
+    //     TopTips: '请输入消息内容'
+    //   });
+    // } else if (is_voice == true && voice_path == '') {
+    //   this.setData({
+    //     showTopTips: true,
+    //     TopTips: '请输入语音消息'
+    //   });
+    // } else {
+    //   if (isSrc) {
+    //     app.uploadfile(src[0], this, 1);
+    //     src = this.data.new_src;
+    //   }
+    //   if (is_voice) {
+    //     app.uploadfile(voice_path,this, 2);
+    //     voice_path = this.data.new_voice_path;
+    //   }
+    //   console.log('校验完毕', src, voice_path);
+    //   that.setData({
+    //     isLoading: true,
+    //     isdisabled: true
+    //   })
 
-      //向表中新增一条数据
-      wx.request({
-        url: app.globalData.pubSiteUrl + 'Info/post',
-        method: 'POST',
-        header: {
-          'Content-Type': 'application/json',
-          'token': app.globalData.token,
-        },
-        data: {
-          openid: wx.getStorageSync('openid'),
-          i_tag: acttypename,
-          i_content: content,
-          i_city: wx.getStorageSync('city'),
-          i_tag: acttypename,
-          i_latitude: localy,
-          i_longitude: localx,
-          i_stale_at: length,
-          i_img: src,
-          i_voice: voice_path,
-        },
-        success: function (res) {
-          if (res.data.status == 200) {
-            console.log(res.data);
-          }
-        },
-        fail: function () {
-          app.consoleLog("发布失败");
-        },
-      });
-   }
+    //   //向表中新增一条数据
+    //   wx.request({
+    //     url: app.globalData.pubSiteUrl + 'Info/post',
+    //     method: 'POST',
+    //     header: {
+    //       'Content-Type': 'application/json',
+    //       'token': app.globalData.token,
+    //     },
+    //     data: {
+    //       openid: wx.getStorageSync('openid'),
+    //       i_tag: acttypename,
+    //       i_content: content,
+    //       i_city: wx.getStorageSync('city'),
+    //       i_tag: acttypename,
+    //       i_latitude: localy,
+    //       i_longitude: localx,
+    //       i_stale_at: length,
+    //       i_img: src,
+    //       i_voice: voice_path,
+    //     },
+    //     success: function (res) {
+    //       if (res.data.status == 200) {
+    //         console.log(res.data);
+    //       }
+    //     },
+    //     fail: function () {
+    //       app.consoleLog("发布失败");
+    //     },
+    //   });
+  //  }
     setTimeout(function () {
       that.setData({
         showTopTips: false
       });
     }, 1000);
-    wx.navigateBack({//返回
-      delta: 1
-    })
+    // wx.navigateBack({//返回
+    //   delta: 1
+    // })
   },
   upBack:function(my,path, type){
     if(type == 1){
