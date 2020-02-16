@@ -221,7 +221,7 @@ class InformationController extends BaseController
             'district'=>$district,
         ];
         $infect = $this->mInfect->where($data)->first();
-        if(empty($infect)){
+        if(empty($infect) || $infect->updated_at < Carbon::today()){
             $APIKEY = env('TX_KEY');
             $url = "http://api.tianapi.com/txapi/ncovnearby/index?key={$APIKEY}&province={$province}&city={$city}&district={$district}";
     
@@ -229,11 +229,17 @@ class InformationController extends BaseController
             $json = json_decode($info,true);//将json解析成数组
             if($json['code'] == 200){ //判断状态码
                 $list = $json['newslist'];
-                $data['data'] = json_encode($list);
-                $this->mInfect->insert($data);
+                $jsonData = json_encode($list);
+                if(!empty($infect)){
+                    $infect->update(['data'=>$jsonData,'updated_at'=>Carbon::now()]);
+                }else{
+                    $data['data'] = json_encode($list);
+                    $this->mInfect->create($data);
+                }
             }else{	
                 $list = [];
                 Log::info("返回错误，状态消息：".$json['msg']);
+                return $this->_response(1000,config('code.1000'));
             }
         }else{
             $list = json_decode($infect->data,true);

@@ -9,5 +9,5 @@ class Infect extends Model
     protected $table = 'infect';
     protected $guarded = [];
 
-
+    public $timestamps = true;
 }
