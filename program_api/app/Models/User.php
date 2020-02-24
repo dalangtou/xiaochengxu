@@ -33,4 +33,9 @@ class User extends Model
 
         return $this->create($data);
     }
+
+    public function getUserIdByOpenId($openid)
+    {
+        return $this->where('openid', $openid)->first();
+    }
 }

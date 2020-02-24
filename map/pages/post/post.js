@@ -219,9 +219,6 @@ Page({
         localy:slocaly,
         address:'点击选择位置',
       })
-      console.log('点击选择位置');
-      console.log('x' + that.data.localx);
-      console.log('y' + that.data.localy);
     } else if (e.detail.value == true) {
       this.setData({
         islocal: true
@@ -362,7 +359,7 @@ Page({
     })
   },
   addressChange: function (e) {
-    console.log('sssss');
+    
   },
   
   //表单验证
@@ -380,23 +377,8 @@ Page({
   //提交表单
   submitForm: function (e) {
     var that = this;
-    var typeIndex = this.data.typeIndex;
-    var acttype = parseInt(typeIndex);//类别下标
-    var acttypename = this.data.types[acttype]; //获得类型名称
-
-    var rangeIndex = this.data.rangeIndex;//限制人群
-    var rangenum = parseInt(rangeIndex)
-    var distance = this.data.range[rangenum]
-
-    var timelengthIndex = this.data.timelengthIndex;//获得有效时长
-    var timelengthnum = parseInt(timelengthIndex)
-    var length = this.data.timelength[timelengthnum]
 
     var address = this.data.address
-    var localx = this.data.localx; //经度
-    var localy = this.data.localy;//纬度
-
-    var switchHide = e.detail.value.switchHide;//当前位置按钮
 
     var content = e.detail.value.content;//内容
 
@@ -406,91 +388,130 @@ Page({
     var isSrc = this.data.isSrc;
     var src = this.data.src;//图片 数组!
     
-    wx.showModal({
-      title: '系统通知',
-      content: '敬请期待!玩命研发中!',
-      showCancel: false,
-    })
-    // if (address == '点击选择位置') {
-    //   this.setData({
-    //     showTopTips: true,
-    //     TopTips: '请选择地点'
-    //   });
-    // } else if (content == "") {
-    //   this.setData({
-    //     showTopTips: true,
-    //     TopTips: '请输入消息内容'
-    //   });
-    // } else if (is_voice == true && voice_path == '') {
-    //   this.setData({
-    //     showTopTips: true,
-    //     TopTips: '请输入语音消息'
-    //   });
-    // } else {
-    //   if (isSrc) {
-    //     app.uploadfile(src[0], this, 1);
-    //     src = this.data.new_src;
-    //   }
-    //   if (is_voice) {
-    //     app.uploadfile(voice_path,this, 2);
-    //     voice_path = this.data.new_voice_path;
-    //   }
-    //   console.log('校验完毕', src, voice_path);
-    //   that.setData({
-    //     isLoading: true,
-    //     isdisabled: true
-    //   })
+    var upload = [];
+    // wx.showModal({
+    //   title: '系统通知',
+    //   content: '敬请期待!玩命研发中!',
+    //   showCancel: false,
+    // })
+    if (address == '点击选择位置') {
+      this.setData({
+        showTopTips: true,
+        TopTips: '请选择地点'
+      });
+    } else if (content == "") {
+      this.setData({
+        showTopTips: true,
+        TopTips: '请输入消息内容'
+      });
+    } else if (is_voice == true && voice_path == '') {
+      this.setData({
+        showTopTips: true,
+        TopTips: '请输入语音消息'
+      });
+    } else {
+      if (isSrc) {
+        upload.push({ 'src': src[0], 'type': 1 })
+      }
+      if (is_voice) {
+        upload.push({ 'src': voice_path, 'type': 2 })
+      }
 
-    //   //向表中新增一条数据
-    //   wx.request({
-    //     url: app.globalData.pubSiteUrl + 'Info/post',
-    //     method: 'POST',
-    //     header: {
-    //       'Content-Type': 'application/json',
-    //       'token': app.globalData.token,
-    //     },
-    //     data: {
-    //       openid: wx.getStorageSync('openid'),
-    //       i_tag: acttypename,
-    //       i_content: content,
-    //       i_city: wx.getStorageSync('city'),
-    //       i_tag: acttypename,
-    //       i_latitude: localy,
-    //       i_longitude: localx,
-    //       i_stale_at: length,
-    //       i_img: src,
-    //       i_voice: voice_path,
-    //     },
-    //     success: function (res) {
-    //       if (res.data.status == 200) {
-    //         console.log(res.data);
-    //       }
-    //     },
-    //     fail: function () {
-    //       app.consoleLog("发布失败");
-    //     },
-    //   });
-  //  }
+      if(upload.length > 0){
+        app.uploadfile(upload, this,e);
+      }else{
+        my.requestSever(my, e)
+      }
+   }
+  },
+  upBack: function (my, upload,e){
+    for (var key in upload) {
+      if (upload[key]['type'] == 1) {
+        my.setData({
+          new_src: upload[key]['newpath']
+        });
+      }
+      if (upload[key]['type'] == 2) {
+        my.setData({
+          new_voice_path: path
+        });
+      }
+    }
+    my.requestSever(my, e)
+  },
+  requestSever: function (my, e) {
+    var that = my;
+    var typeIndex = that.data.typeIndex;
+    var acttype = parseInt(typeIndex);//类别下标
+    var acttypename = that.data.types[acttype]; //获得类型名称
+
+    var rangeIndex = that.data.rangeIndex;//限制人群
+    var rangenum = parseInt(rangeIndex)
+    var distance = that.data.range[rangenum]
+
+    var timelengthIndex = that.data.timelengthIndex;//获得有效时长
+    var timelengthnum = parseInt(timelengthIndex)
+    var length = that.data.timelength[timelengthnum]
+
+    var address = that.data.address
+    var localx = that.data.localx; //经度
+    var localy = that.data.localy;//纬度
+
+    var switchHide = e.detail.value.switchHide;//当前位置按钮
+
+    var content = e.detail.value.content;//内容
+
+    var is_voice = that.data.is_voice;
+    var voice_path = that.data.new_voice_path;//录音路径
+
+    var isSrc = that.data.isSrc;
+    var src = that.data.new_src;//图片 数组!
+
+    that.setData({
+      isLoading: true,
+      isdisabled: true
+    })
+
+    // //向表中新增一条数据
+    wx.request({
+      url: app.globalData.pubSiteUrl + 'Info/post',
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+        'token': app.globalData.token,
+      },
+      data: {
+        openid: wx.getStorageSync('openid'),
+        i_tag: acttype,
+        i_content: content,
+        i_city: wx.getStorageSync('city'),
+        i_local: address,
+        i_latitude: localy,
+        i_longitude: localx,
+        i_stale_at: length,
+        i_img: src,
+        i_voice: voice_path,
+      },
+      success: function (res) {
+        if (res.data.status == 200) {
+          console.log(res.data);
+        }
+      },
+      fail: function () {
+        app.consoleLog("发布失败");
+      },
+    });
+
     setTimeout(function () {
       that.setData({
         showTopTips: false
       });
     }, 1000);
-    // wx.navigateBack({//返回
-    //   delta: 1
-    // })
-  },
-  upBack:function(my,path, type){
-    if(type == 1){
-      my.setData({
-        new_src: path
-      });
-    }
-    if (type == 2) {
-      my.setData({
-        new_voice_path: path
-      });
-    }
+    wx.navigateBack({//返回
+      delta: 1
+    })
+
+
   },
   /**
    * 生命周期函数--监听页面隐藏

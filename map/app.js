@@ -106,40 +106,42 @@ App({
   Touches: new Touches(),
   util: __utils,
   globalData:{
-    pubSiteUrl: "http://www.eternity999.cn/shaokang/test/xiaochengxu/program_api/public/index.php/",//服务器
-    // pubSiteUrl: "http://program-api.com/",//本地
+    // pubSiteUrl: "http://www.eternity999.cn/shaokang/test/xiaochengxu/program_api/public/",//服务器
+    pubSiteUrl: "http://program-api.com/",//本地
     token:'122b86a4c20dd9ccab58c48042d1f7fd',
   },
-  uploadfile: function (path,other,type) {
+  uploadfile: function (upload,other,e) {
     var that = this;
-    var newpath = '';
-    wx.uploadFile({
-      url: that.globalData.pubSiteUrl + 'Info/uploadFile', //url,
-      filePath: path,
-      name: 'file',
-      header: {
-        'token': that.globalData.token,
-      }, 
-      formData: {
-        'key': 'aaadd'//这里是为文件设置上传后的文件名
-      },
-      success: function (res) {
-        var str = res.data;
-        var res = JSON.parse(str);
-        
-        if(res.status == 200){
-          newpath = res.data;
-          console.log(newpath);
-          other.upBack(other, newpath,type)
+    for (var key in upload) {
+      wx.uploadFile({
+        url: that.globalData.pubSiteUrl + 'Info/uploadFile', //url,
+        filePath: upload[key]['src'],
+        name: 'file',
+        header: {
+          'token': that.globalData.token,
+        },
+        formData: {
+          'key': 'aaadd'//这里是为文件设置上传后的文件名
+        },
+        success: function (res) {
+          var str = res.data;
+          var res = JSON.parse(str);
+
+          if (res.status == 200) {
+            upload[key]['newpath'] = res.data;
+          }
+          if(key+1 == upload.length){
+            other.upBack(other, upload,e)
+          }
+        },
+        fail: function (res) {
+          wx.showToast({
+            title: '未知错误',
+            image: '../../img/fail.png',
+            duration: 3000
+          })
         }
-      },
-      fail:function(res){
-        wx.showToast({
-          title: '未知错误',
-          image: '../../img/fail.png',
-          duration: 3000
-        })
-      }
-    });
+      });
+    }
   },
 })

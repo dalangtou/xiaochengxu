@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,6 +23,14 @@ class Header
         {
             return response('Unauthorized.', 401);
         }
+
+        $openid = $request->input('openid','');
+        $mUser = new User();
+        $user = $mUser->getUserIdByOpenId($openid);
+        if ($user) {
+            $request->attributes->set('u_id', $user->id);
+        }
+        unset($request['openid']);
 
         return $next($request);
     }

@@ -19,7 +19,6 @@
 Route::group(['middleware'=>'header'], function () {
 
     Route::group(['prefix' => 'user', 'namespace' => '\User'], function () {
-        Route::post('/login', 'UserController@login');
         Route::post('/update', 'UserController@update');
     });
 
@@ -42,4 +41,8 @@ Route::group([], function () {
     Route::get('Info/postInfo', 'Information\InformationController@postInfo');
 
     Route::get('verifyUser', 'User\UserController@verifyUser');
+
+    Route::group(['prefix' => 'user', 'namespace' => '\User'], function () {
+        Route::post('/login', 'UserController@login');
+    });
 });

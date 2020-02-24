@@ -47,10 +47,11 @@ class InformationController extends BaseController
     //发布
     public function post()
     {
+        $u_id = $this->request->attributes->get('u_id',null);
         $data = $this->request->all();
+        if (!isset($u_id) || empty($u_id)) return $this->_response(1001,config('code.1001'));
 
-        if (!isset($data['u_id'])) return $this->_response(1001,config('code.1001'));
-
+        $data['u_id'] = $u_id;
         $data['i_geohash'] = GeoHash::encode($data['i_latitude'], $data['i_longitude']);
 
         $data['i_type'] = 0;
@@ -137,8 +138,8 @@ class InformationController extends BaseController
     public function clearData($list)
     {
         return $list->map(function ($item){
-            $item->iconPath = '../../img/marker_yellow.png';
-            $item->iconTapPath = '../../img/marker_yellow.png';
+            $item->iconPath = '../../img/user03.png';
+            $item->iconTapPath = '../../img/user03.png';
             $item->callout = [
                 'content'=>$item->i_content,
                 'color'=>'#f00',
