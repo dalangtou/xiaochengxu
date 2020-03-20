@@ -31,15 +31,22 @@ Page({
 
   bindcallouttap: function (e) {
     console.log("头上文字被点击", e);
+    
   },
   markertap: function (e) {
     console.log("定位的点被点击", e);
     var id = e.markerId-1;
-    wx.showModal({
-      title: this.data.virus[id]['source'],
-      content: this.data.virus[id]['locale'] +',\r\n'+ this.data.virus[id]['address'],
-      showCancel: false,
-    })
+    try{
+      if ('source' in this.data.virus[id]) {
+        wx.showModal({
+          title: this.data.virus[id]['source'],
+          content: this.data.virus[id]['locale'] + ',\r\n' + this.data.virus[id]['address'],
+          showCancel: false,
+        })
+      }
+    }catch(e){
+      console.log(this.data.markers);
+    }
   },
 
   onLoad: function () {
